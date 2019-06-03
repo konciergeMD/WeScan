@@ -225,7 +225,9 @@ final class ScannerViewController: UIViewController {
         CaptureSession.current.removeFocusRectangleIfNeeded(focusRectangle, animated: false)
         
         focusRectangle = FocusRectangleView(touchPoint: touchPoint)
-        view.addSubview(focusRectangle)
+        if let quadViewIndex = self.view.subviews.firstIndex(of: quadView), quadViewIndex + 1 <= self.view.subviews.count {
+            self.view.insertSubview(focusRectangle, at: quadViewIndex + 1)
+        }
         
         do {
             try CaptureSession.current.setFocusPointToTapPoint(convertedTouchPoint)
