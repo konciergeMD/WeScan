@@ -22,7 +22,7 @@ final class ScannerViewController: UIViewController {
     private let quadView = QuadrilateralView()
     
     /// The visual effect (blur) view used on the navigation bar
-    private let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
+    private let visualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .regular))
     
     /// Whether flash is enabled
     private var flashEnabled = false
