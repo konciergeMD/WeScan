@@ -31,34 +31,4 @@ extension CGImagePropertyOrientation {
             self = .right
         }
     }
-    
-    init(_ deviceOrientation: UIDeviceOrientation) {
-        switch deviceOrientation {
-        case .portrait, .faceUp, .faceDown, .unknown:
-            self = .up
-        case .portraitUpsideDown:
-            self = .down
-        case .landscapeLeft:
-            self = .left
-        case .landscapeRight:
-            self = .right
-        @unknown default:
-            self = .up
-        }
-    }
-    
-    init(_ interfaceOrientation: UIInterfaceOrientation) {
-        switch interfaceOrientation {
-        case .portrait, .unknown:
-            self = .up
-        case .portraitUpsideDown:
-            self = .down
-        case .landscapeLeft:
-            self = .left
-        case .landscapeRight:
-            self = .right
-        @unknown default:
-            self = .up
-        }
-    }
 }
