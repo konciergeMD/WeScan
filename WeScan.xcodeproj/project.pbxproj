@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		19660E3F2385C6BD00477680 /* UIInterfaceOrientation+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19660E3E2385C6BD00477680 /* UIInterfaceOrientation+Utils.swift */; };
 		362967782294C23700B9FC4A /* CGImagePropertyOrientation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 362967772294C23700B9FC4A /* CGImagePropertyOrientation.swift */; };
 		74E27858215446C900361812 /* FBSnapshotTestCase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 74E27850215446C200361812 /* FBSnapshotTestCase.framework */; };
 		74F7D034211ACBD90046AF7E /* CIRectangleDetectorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74F7D033211ACBD90046AF7E /* CIRectangleDetectorTests.swift */; };
@@ -184,6 +185,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		19660E3E2385C6BD00477680 /* UIInterfaceOrientation+Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIInterfaceOrientation+Utils.swift"; sourceTree = "<group>"; };
 		274DF35922D363BC0095CE49 /* hu */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hu; path = hu.lproj/Localizable.strings; sourceTree = "<group>"; };
 		362967772294C23700B9FC4A /* CGImagePropertyOrientation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CGImagePropertyOrientation.swift; sourceTree = "<group>"; };
 		4A644E2221A73C2B00B20839 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -441,6 +443,7 @@
 				C3E2EB8D20B8970800A42E58 /* UIImage+Utils.swift */,
 				A1DF90F52037187500841A11 /* UIImage+Orientation.swift */,
 				362967772294C23700B9FC4A /* CGImagePropertyOrientation.swift */,
+				19660E3E2385C6BD00477680 /* UIInterfaceOrientation+Utils.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -807,6 +810,7 @@
 				A1DF90F22035992A00841A11 /* CGAffineTransform+Utils.swift in Sources */,
 				A1F22EA3202DAA74001723AD /* RectangleFeaturesFunnel.swift in Sources */,
 				A1D4BD0E202C57A400FCDDEC /* CaptureSessionManager.swift in Sources */,
+				19660E3F2385C6BD00477680 /* UIInterfaceOrientation+Utils.swift in Sources */,
 				B9AAE88B219E6C0400205620 /* FocusRectangleView.swift in Sources */,
 				A1F22ECE2031937E001723AD /* EditScanViewController.swift in Sources */,
 				A1F22E9F202C8D70001723AD /* Quadrilateral.swift in Sources */,
@@ -1047,7 +1051,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.WeTransfer.WeScanSampleProject;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -1064,7 +1068,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.WeTransfer.WeScanSampleProject;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};

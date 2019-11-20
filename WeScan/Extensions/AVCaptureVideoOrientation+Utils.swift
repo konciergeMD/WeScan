@@ -15,20 +15,35 @@ extension AVCaptureVideoOrientation {
     init?(deviceOrientation: UIDeviceOrientation) {
         switch deviceOrientation {
         case .portrait:
-            self.init(rawValue: AVCaptureVideoOrientation.portrait.rawValue)
+            self = .portrait
         case .portraitUpsideDown:
-            self.init(rawValue: AVCaptureVideoOrientation.portraitUpsideDown.rawValue)
+            self = .portraitUpsideDown
         case .landscapeLeft:
-            self.init(rawValue: AVCaptureVideoOrientation.landscapeLeft.rawValue)
+            self = .landscapeLeft
         case .landscapeRight:
-            self.init(rawValue: AVCaptureVideoOrientation.landscapeRight.rawValue)
+            self = .landscapeRight
         case .faceUp:
-            self.init(rawValue: AVCaptureVideoOrientation.portrait.rawValue)
+            self = .portrait
         case .faceDown:
-            self.init(rawValue: AVCaptureVideoOrientation.portraitUpsideDown.rawValue)
+            self = .portraitUpsideDown
         default:
-            self.init(rawValue: AVCaptureVideoOrientation.portrait.rawValue)
+            self = .portrait
         }
     }
     
+    /// Maps UIInterfaceOrientation to AVCaptureVideoOrientation
+    init?(interfaceOrientation: UIDeviceOrientation) {
+        switch interfaceOrientation {
+        case .portrait:
+            self = .portrait
+        case .portraitUpsideDown:
+            self = .portraitUpsideDown
+        case .landscapeLeft:
+            self = .landscapeLeft
+        case .landscapeRight:
+            self = .landscapeRight
+        default:
+            return nil
+        }
+    }
 }
