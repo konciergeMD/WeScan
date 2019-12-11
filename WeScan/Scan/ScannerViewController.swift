@@ -85,6 +85,7 @@ final class ScannerViewController: UIViewController {
         originalBarStyle = navigationController?.navigationBar.barStyle
         
         NotificationCenter.default.addObserver(self, selector: #selector(subjectAreaDidChange), name: Notification.Name.AVCaptureDeviceSubjectAreaDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(captureSessionStopped(_:)), name: Notification.Name.AVCaptureSessionWasInterrupted, object: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -305,6 +306,19 @@ final class ScannerViewController: UIViewController {
         imageScannerController.imageScannerDelegate?.imageScannerControllerDidCancel(imageScannerController)
     }
     
+    @objc private func captureSessionStopped(_ notification: Notification) {
+        guard let userInfo = notification.userInfo else { return }
+        
+        if let interruptionReason = userInfo[AVCaptureSessionInterruptionReasonKey] as? Int, interruptionReason == AVCaptureSession.InterruptionReason.videoDeviceNotAvailableWithMultipleForegroundApps.rawValue {
+            let alertTitle = NSLocalizedString("wescan.scanning.captureSessionInterrupted", tableName: nil, bundle: Bundle(for: ScannerViewController.self), value: "Image capture is not available in SplitView mode. Please make the app fullscreen and try again.", comment: "Error message to show if the device is in SplitView.")
+            let alert = UIAlertController(title: alertTitle, message: nil, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: NSLocalizedString("wescan.scanning.cancel", tableName: nil, bundle: Bundle(for: ScannerViewController.self), value: "Cancel", comment: "The cancel button"), style: .cancel) { [weak self] action in
+                self?.dismiss(animated: true, completion: nil)
+            })
+            
+            present(alert, animated: true, completion: nil)
+        }
+    }
 }
 
 extension ScannerViewController: RectangleDetectionDelegateProtocol {
