@@ -19,3 +19,5 @@
 "wescan.scanning.cancel" = "Cancel";
 "wescan.scanning.auto" = "Auto";
 "wescan.scanning.manual" = "Manual";
+
+"wescan.scanning.captureSessionInterrupted" = "Image capture is not available in SplitView mode. Please make the app fullscreen and try again.";

@@ -30,5 +30,4 @@ extension AVCaptureVideoOrientation {
             self.init(rawValue: AVCaptureVideoOrientation.portrait.rawValue)
         }
     }
-    
 }
