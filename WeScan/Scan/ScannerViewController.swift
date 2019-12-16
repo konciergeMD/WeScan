@@ -260,7 +260,7 @@ final class ScannerViewController: UIViewController {
         case .off:
             flashEnabled = false
             flashButton.image = flashImage
-            flashButton.tintColor = self.navigationController?.navigationBar.tintColor
+            flashButton.tintColor = .white
         case .unknown, .unavailable:
             flashEnabled = false
             flashButton.image = flashOffImage
