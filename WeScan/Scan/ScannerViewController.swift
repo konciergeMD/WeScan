@@ -85,6 +85,7 @@ final class ScannerViewController: UIViewController {
         originalBarStyle = navigationController?.navigationBar.barStyle
         
         NotificationCenter.default.addObserver(self, selector: #selector(subjectAreaDidChange), name: Notification.Name.AVCaptureDeviceSubjectAreaDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(captureSessionStopped(_:)), name: Notification.Name.AVCaptureSessionWasInterrupted, object: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -99,12 +100,13 @@ final class ScannerViewController: UIViewController {
         navigationController?.navigationBar.barTintColor = .black
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
         setNeedsStatusBarAppearanceUpdate()
+        setupVideoOrientation()
+        setupViewsForCurrentOrientation()
     }
     
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        
-        videoPreviewLayer.frame = view.layer.bounds
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        setupViewsForCurrentOrientation()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -115,6 +117,17 @@ final class ScannerViewController: UIViewController {
         if device.torchMode == .on {
             toggleFlash()
         }
+    }
+    
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        coordinator.animate(alongsideTransition: { [weak self] (context) in
+            self?.setupViewsForCurrentOrientation()
+            
+        }) { [weak self] (context) in
+            self?.setupVideoOrientation()
+        }
+        
+        super.viewWillTransition(to: size, with: coordinator)
     }
     
     // MARK: - Setups
@@ -128,6 +141,24 @@ final class ScannerViewController: UIViewController {
         view.addSubview(cancelButton)
         view.addSubview(shutterButton)
         view.addSubview(activityIndicator)
+    }
+    
+    private func setupViewsForCurrentOrientation() {
+        let statusBarHeight = UIApplication.shared.statusBarFrame.size.height
+        let visualEffectRect = self.navigationController?.navigationBar.bounds.insetBy(dx: 0, dy: -(statusBarHeight)).offsetBy(dx: 0, dy: -statusBarHeight)
+        self.visualEffectView.frame = visualEffectRect ?? CGRect.zero
+        videoPreviewLayer.frame = view.layer.bounds
+    }
+    
+    func setupVideoOrientation() {
+        let statusBarOrientation = UIApplication.shared.statusBarOrientation
+        var initialVideoOrientation: AVCaptureVideoOrientation = .portrait
+        if statusBarOrientation != .unknown {
+            if let videoOrientation = AVCaptureVideoOrientation(rawValue: statusBarOrientation.rawValue) {
+                initialVideoOrientation = videoOrientation
+            }
+        }
+        videoPreviewLayer.connection?.videoOrientation = initialVideoOrientation
     }
     
     private func setupNavigationBar() {
@@ -273,6 +304,19 @@ final class ScannerViewController: UIViewController {
         imageScannerController.imageScannerDelegate?.imageScannerControllerDidCancel(imageScannerController)
     }
     
+    @objc private func captureSessionStopped(_ notification: Notification) {
+        guard let userInfo = notification.userInfo else { return }
+        
+        if let interruptionReason = userInfo[AVCaptureSessionInterruptionReasonKey] as? Int, interruptionReason == AVCaptureSession.InterruptionReason.videoDeviceNotAvailableWithMultipleForegroundApps.rawValue {
+            let alertTitle = NSLocalizedString("wescan.scanning.captureSessionInterrupted", tableName: nil, bundle: Bundle(for: ScannerViewController.self), value: "Image capture is not available in SplitView mode. Please make the app fullscreen and try again.", comment: "Error message to show if the device is in SplitView.")
+            let alert = UIAlertController(title: alertTitle, message: nil, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: NSLocalizedString("wescan.scanning.cancel", tableName: nil, bundle: Bundle(for: ScannerViewController.self), value: "Cancel", comment: "The cancel button"), style: .cancel) { [weak self] action in
+                self?.dismiss(animated: true, completion: nil)
+            })
+            
+            present(alert, animated: true, completion: nil)
+        }
+    }
 }
 
 extension ScannerViewController: RectangleDetectionDelegateProtocol {
@@ -307,12 +351,15 @@ extension ScannerViewController: RectangleDetectionDelegateProtocol {
             return
         }
         
-        let portraitImageSize = CGSize(width: imageSize.height, height: imageSize.width)
+        let statusBarOrientation = UIApplication.shared.statusBarOrientation
         
-        let scaleTransform = CGAffineTransform.scaleTransform(forSize: portraitImageSize, aspectFillInSize: quadView.bounds.size)
+        let orientedImageSize = CGSize(width: statusBarOrientation.isPortrait ? imageSize.height : imageSize.width, height: statusBarOrientation.isPortrait ? imageSize.width : imageSize.height)
+        
+        let scaleTransform = CGAffineTransform.scaleTransform(forSize: orientedImageSize, aspectFillInSize: quadView.bounds.size)
+        
         let scaledImageSize = imageSize.applying(scaleTransform)
         
-        let rotationTransform = CGAffineTransform(rotationAngle: CGFloat.pi / 2.0)
+        let rotationTransform = CGAffineTransform(rotationAngle: statusBarOrientation.rotationAngle)
 
         let imageBounds = CGRect(origin: .zero, size: scaledImageSize).applying(rotationTransform)
 
